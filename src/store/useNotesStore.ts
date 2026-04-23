@@ -15,11 +15,24 @@ import { generateId } from '@utils/generateId';
 
 const PERSIST_DEBOUNCE_MS = 500;
 
+const maxZIndex = (state: Note[]): number => state.reduce((max, n) => Math.max(max, n.zIndex), 0);
 
 const notesReducer = (state: Note[], action: NotesAction): Note[] => {
   switch (action.type) {
-    case ACTION_ADD:
-      return [...state, action.payload];
+    case ACTION_ADD: {
+      const note: Note = {
+        id: generateId(),
+        x: action.payload.x,
+        y: action.payload.y,
+        width: DEFAULT_NOTE_WIDTH,
+        height: DEFAULT_NOTE_HEIGHT,
+        title: '',
+        text: '',
+        color: action.payload.color,
+        zIndex: maxZIndex(state) + 1,
+      };
+      return [...state, note];
+    }
 
     case ACTION_UPDATE:
       return state.map((n) => (n.id === action.payload.id ? { ...n, ...action.payload } : n));
@@ -31,7 +44,7 @@ const notesReducer = (state: Note[], action: NotesAction): Note[] => {
       return [];
 
     case ACTION_BRING_TO_FRONT: {
-      const maxZ = state.reduce((max, n) => Math.max(max, n.zIndex), 0);
+      const maxZ = maxZIndex(state);
       return state.map((n) => (n.id === action.payload ? { ...n, zIndex: maxZ + 1 } : n));
     }
 
@@ -53,13 +66,11 @@ export const useNotesStore = (): NotesStore => {
   const [notes, dispatch] = useReducer(notesReducer, []);
   const loaded = useRef(false);
   const debounceTimer = useRef<ReturnType<typeof setTimeout>>();
-  const nextZRef = useRef(0);
 
   useEffect(() => {
     fetchNotes()
       .then((saved) => {
         dispatch({ type: ACTION_LOAD, payload: saved });
-        nextZRef.current = saved.reduce((max, n) => Math.max(max, n.zIndex), 0) + 1;
         loaded.current = true;
       })
       .catch(console.error);
@@ -81,18 +92,7 @@ export const useNotesStore = (): NotesStore => {
   }, [notes]);
 
   const addNote = useCallback((params: NoteCreateParams) => {
-    const note: Note = {
-      id: generateId(),
-      x: params.x,
-      y: params.y,
-      width: DEFAULT_NOTE_WIDTH,
-      height: DEFAULT_NOTE_HEIGHT,
-      title: '',
-      text: '',
-      color: params.color,
-      zIndex: nextZRef.current++,
-    };
-    dispatch({ type: ACTION_ADD, payload: note });
+    dispatch({ type: ACTION_ADD, payload: params });
   }, []);
 
   const updateNote = useCallback((payload: NoteUpdate) => {

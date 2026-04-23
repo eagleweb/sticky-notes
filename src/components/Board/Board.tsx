@@ -2,7 +2,7 @@ import type { MouseEvent, RefObject } from 'react';
 import { memo, useCallback } from 'react';
 
 import styles from './Board.module.css';
-import { NoteCard } from '../Note/Note';
+import { NoteCard } from '@components/Note/Note';
 import { DEFAULT_NOTE_HEIGHT, DEFAULT_NOTE_WIDTH } from '@constants/note';
 import type { Note as NoteType, NoteColor, NoteCreateParams, NoteUpdate } from '@typeDefs/note';
 

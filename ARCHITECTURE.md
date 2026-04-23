@@ -1,5 +1,3 @@
-# Architecture
-
 ## Functionality
 
 - **Create notes** — double-click anywhere on the board to add a sticky note
@@ -27,6 +25,7 @@
 
 ## Tooling
 
+- **React 18** — I used v18 beacause I suppose for now you also use it in you project 
 - **Vite 8** — dev server and production bundler (`@vitejs/plugin-react` for Fast Refresh)
 - **TypeScript 6** — strict mode, `verbatimModuleSyntax`, `noUnusedLocals`/`noUnusedParameters` enabled
 - **ESLint 10** (flat config) with:

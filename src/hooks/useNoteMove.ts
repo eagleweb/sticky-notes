@@ -21,7 +21,6 @@ type UseNoteMoveResult = {
   handleMoveDown: (e: ReactPointerEvent) => void;
 };
 
-
 export const useNoteMove = ({
   note,
   noteRef,
@@ -66,4 +65,3 @@ export const useNoteMove = ({
 
   return { overTrash, handleMoveDown };
 };
-

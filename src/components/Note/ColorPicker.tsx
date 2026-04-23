@@ -28,13 +28,16 @@ export const ColorPicker = memo<ColorPickerProps>(function ColorPicker({ onColor
   );
 
   return (
-    <div ref={containerRef} style={{ position: 'relative' }}>
+    <div
+      ref={containerRef}
+      style={{ position: 'relative' }}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <button
         className={styles.colorBtn}
         title="Change color"
-        onPointerDown={(e) => {
-          e.stopPropagation();
-        }}
         onClick={() => {
           setOpen((v) => !v);
         }}
@@ -59,4 +62,3 @@ export const ColorPicker = memo<ColorPickerProps>(function ColorPicker({ onColor
     </div>
   );
 });
-

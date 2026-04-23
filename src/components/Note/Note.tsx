@@ -72,13 +72,7 @@ export const NoteCard = memo<NoteProps>(function NoteCard({
         backgroundColor: COLOR_MAP[note.color],
       }}
     >
-      <div
-        className={styles.dragBar}
-        onPointerDown={handleMoveDown}
-        role="button"
-        aria-label="Drag to move note"
-        tabIndex={0}
-      >
+      <div className={styles.dragBar} onPointerDown={handleMoveDown} aria-label="Drag to move note">
         <span className={styles.grip}>⋮⋮</span>
         <ColorPicker onColorChange={handleColorChange} />
       </div>
