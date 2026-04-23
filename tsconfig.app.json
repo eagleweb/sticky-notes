@@ -20,7 +20,8 @@
       "@constants/*": ["./src/constants/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@store/*": ["./src/store/*"],
-      "@typeDefs/*": ["./src/types/*"]
+      "@typeDefs/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true,

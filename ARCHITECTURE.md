@@ -9,8 +9,11 @@
 - **Change color** — per-note color picker (yellow, pink, blue, green, orange, purple)
 - **Z-order** — clicking or dragging a note brings it to the front
 - **Delete note** — drag a note onto the trash zone at the bottom
-- **Clear all** — toolbar button removes every note at once
 - **Persistence** — notes auto-save to `localStorage` via a debounced mock REST API (500 ms), surviving page reloads
+
+## Aditional Features
+- **Clear all** — toolbar button removes every note at once
+- **Viewport** — don't allow notes to be dragged outside the visible area of the board; resizing is also constrained to prevent overflow
 
 ## Architecture & Design Decisions
 

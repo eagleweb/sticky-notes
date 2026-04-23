@@ -1,9 +1,9 @@
 import type { Note } from '@typeDefs/note';
+import { delay } from '@utils/delay';
 
 const STORAGE_KEY = 'sticky-notes';
 const SIMULATED_DELAY_MS = 150;
 
-const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 const readStore = (): Note[] => {
   try {

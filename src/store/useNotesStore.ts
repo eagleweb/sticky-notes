@@ -11,14 +11,10 @@ import {
 } from '@constants/actions';
 import { DEFAULT_NOTE_HEIGHT, DEFAULT_NOTE_WIDTH } from '@constants/note';
 import type { Note, NoteCreateParams, NoteUpdate, NotesAction } from '@typeDefs/note';
+import { generateId } from '@utils/generateId';
 
 const PERSIST_DEBOUNCE_MS = 500;
 
-const generateId = (): string => {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-};
 
 const notesReducer = (state: Note[], action: NotesAction): Note[] => {
   switch (action.type) {
