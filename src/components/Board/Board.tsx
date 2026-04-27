@@ -1,5 +1,5 @@
 import type { MouseEvent, RefObject } from 'react';
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import styles from './Board.module.css';
 import { NoteCard } from '@components/Note/Note';
@@ -25,26 +25,23 @@ export const Board = memo<BoardProps>(function Board({
   onBringToFront,
   trashRef,
 }) {
-  const handleDoubleClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      if (e.target !== e.currentTarget) {
-        return;
-      }
+  const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
 
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = Math.min(
-        Math.max(0, e.clientX - rect.left - DEFAULT_NOTE_WIDTH / 2),
-        rect.width - DEFAULT_NOTE_WIDTH,
-      );
-      const y = Math.min(
-        Math.max(0, e.clientY - rect.top - DEFAULT_NOTE_HEIGHT / 2),
-        rect.height - DEFAULT_NOTE_HEIGHT,
-      );
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.min(
+      Math.max(0, e.clientX - rect.left - DEFAULT_NOTE_WIDTH / 2),
+      rect.width - DEFAULT_NOTE_WIDTH,
+    );
+    const y = Math.min(
+      Math.max(0, e.clientY - rect.top - DEFAULT_NOTE_HEIGHT / 2),
+      rect.height - DEFAULT_NOTE_HEIGHT,
+    );
 
-      onAddNote({ x, y, color: selectedColor });
-    },
-    [selectedColor, onAddNote],
-  );
+    onAddNote({ x, y, color: selectedColor });
+  };
 
   return (
     <div className={styles.root} onDoubleClick={handleDoubleClick}>

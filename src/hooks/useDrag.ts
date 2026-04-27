@@ -33,14 +33,25 @@ export const useDrag = (callbacks: DragCallbacks): ((e: ReactPointerEvent) => vo
       callbacksRef.current.onDragMove(dx, dy, ev);
     };
 
-    const onUp = (ev: PointerEvent) => {
+    const cleanup = (ev: PointerEvent) => {
       target.releasePointerCapture(ev.pointerId);
       target.removeEventListener('pointermove', onMove);
       target.removeEventListener('pointerup', onUp);
+      target.removeEventListener('pointercancel', onCancel);
+    };
+
+    const onUp = (ev: PointerEvent) => {
+      cleanup(ev);
+      callbacksRef.current.onDragEnd?.(ev);
+    };
+
+    const onCancel = (ev: PointerEvent) => {
+      cleanup(ev);
       callbacksRef.current.onDragEnd?.(ev);
     };
 
     target.addEventListener('pointermove', onMove);
     target.addEventListener('pointerup', onUp);
+    target.addEventListener('pointercancel', onCancel);
   }, []);
 };

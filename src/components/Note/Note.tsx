@@ -25,7 +25,7 @@ export const NoteCard = memo<NoteProps>(function NoteCard({
 }) {
   const noteRef = useRef<HTMLDivElement>(null);
 
-  const { overTrash, handleMoveDown } = useNoteMove({
+  const handleMoveDown = useNoteMove({
     note,
     noteRef,
     trashRef,
@@ -34,21 +34,15 @@ export const NoteCard = memo<NoteProps>(function NoteCard({
     onBringToFront,
   });
 
-  const handleResizeDown = useNoteResize({ note, onUpdate, onBringToFront });
+  const handleResizeDown = useNoteResize({ note, noteRef, onUpdate, onBringToFront });
 
-  const handleTextChange = useCallback(
-    (e: ChangeEvent<HTMLTextAreaElement>) => {
-      onUpdate({ id: note.id, text: e.target.value });
-    },
-    [note.id, onUpdate],
-  );
+  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    onUpdate({ id: note.id, text: e.target.value });
+  };
 
-  const handleTitleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      onUpdate({ id: note.id, title: e.target.value });
-    },
-    [note.id, onUpdate],
-  );
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onUpdate({ id: note.id, title: e.target.value });
+  };
 
   const handleColorChange = useCallback(
     (color: NoteColor) => {
@@ -57,12 +51,10 @@ export const NoteCard = memo<NoteProps>(function NoteCard({
     [note.id, onUpdate],
   );
 
-  const rootClass = overTrash ? `${styles.root} ${styles.overTrash}` : styles.root;
-
   return (
     <div
       ref={noteRef}
-      className={rootClass}
+      className={styles.root}
       style={{
         left: note.x,
         top: note.y,

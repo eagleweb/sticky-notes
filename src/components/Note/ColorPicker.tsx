@@ -19,13 +19,10 @@ export const ColorPicker = memo<ColorPickerProps>(function ColorPicker({ onColor
 
   useClickOutside(containerRef, open, close);
 
-  const handleSelect = useCallback(
-    (color: NoteColor) => {
-      onColorChange(color);
-      setOpen(false);
-    },
-    [onColorChange],
-  );
+  const handleSelect = (color: NoteColor) => {
+    onColorChange(color);
+    setOpen(false);
+  };
 
   return (
     <div

@@ -17,6 +17,11 @@ const PERSIST_DEBOUNCE_MS = 500;
 
 const maxZIndex = (state: Note[]): number => state.reduce((max, n) => Math.max(max, n.zIndex), 0);
 
+const normalizeZIndexes = (state: Note[]): Note[] => {
+  const sorted = [...state].sort((a, b) => a.zIndex - b.zIndex);
+  return sorted.map((n, i) => (n.zIndex === i + 1 ? n : { ...n, zIndex: i + 1 }));
+};
+
 const notesReducer = (state: Note[], action: NotesAction): Note[] => {
   switch (action.type) {
     case ACTION_ADD: {
@@ -38,18 +43,29 @@ const notesReducer = (state: Note[], action: NotesAction): Note[] => {
       return state.map((n) => (n.id === action.payload.id ? { ...n, ...action.payload } : n));
 
     case ACTION_REMOVE:
-      return state.filter((n) => n.id !== action.payload);
+      return normalizeZIndexes(state.filter((n) => n.id !== action.payload));
 
     case ACTION_CLEAR_ALL:
       return [];
 
     case ACTION_BRING_TO_FRONT: {
       const maxZ = maxZIndex(state);
-      return state.map((n) => (n.id === action.payload ? { ...n, zIndex: maxZ + 1 } : n));
+      const target = state.find((n) => n.id === action.payload);
+      if (!target || target.zIndex === maxZ) {
+        return state;
+      }
+      return normalizeZIndexes(
+        state.map((n) => (n.id === action.payload ? { ...n, zIndex: maxZ + 1 } : n)),
+      );
     }
 
     case ACTION_LOAD:
-      return action.payload;
+      return normalizeZIndexes(action.payload);
+
+    default: {
+      const _exhaustive: never = action;
+      return _exhaustive;
+    }
   }
 };
 

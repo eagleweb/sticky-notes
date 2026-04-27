@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 
 import styles from './Toolbar.module.css';
 import { COLOR_MAP, NOTE_COLORS } from '@constants/note';
@@ -17,11 +17,11 @@ export const Toolbar = memo<ToolbarProps>(function Toolbar({
   hasNotes,
   onClearAll,
 }) {
-  const handleClearAll = useCallback(() => {
+  const handleClearAll = () => {
     if (window.confirm('Delete all notes? This cannot be undone.')) {
       onClearAll();
     }
-  }, [onClearAll]);
+  };
 
   return (
     <div className={styles.root}>

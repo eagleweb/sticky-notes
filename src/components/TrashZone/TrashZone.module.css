@@ -21,7 +21,7 @@
   pointer-events: auto;
 }
 
-.active {
+.root[data-trash-active] {
   background: rgba(239, 68, 68, 0.25);
 }
 

@@ -1,5 +1,5 @@
 import type { PointerEvent as ReactPointerEvent, RefObject } from 'react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 
 import { useDrag } from '@hooks/useDrag';
 import type { Note, NoteUpdate } from '@typeDefs/note';
@@ -16,11 +16,6 @@ type UseNoteMoveParams = {
   onBringToFront: (id: string) => void;
 };
 
-type UseNoteMoveResult = {
-  overTrash: boolean;
-  handleMoveDown: (e: ReactPointerEvent) => void;
-};
-
 export const useNoteMove = ({
   note,
   noteRef,
@@ -28,22 +23,28 @@ export const useNoteMove = ({
   onUpdate,
   onRemove,
   onBringToFront,
-}: UseNoteMoveParams): UseNoteMoveResult => {
+}: UseNoteMoveParams): ((e: ReactPointerEvent) => void) => {
   const originRef = useRef({ x: 0, y: 0 });
-  const [overTrash, setOverTrash] = useState(false);
+  const finalPos = useRef({ x: 0, y: 0 });
 
   const isNoteOverTrash = useCallback(
     () => isOverlapping(noteRef.current, trashRef.current),
     [noteRef, trashRef],
   );
 
-  const handleMoveDown = useDrag({
+  const setOverTrash = (over: boolean) => {
+    noteRef.current?.toggleAttribute('data-over-trash', over);
+    trashRef.current?.toggleAttribute('data-trash-active', over);
+  };
+
+  return useDrag({
     onDragStart: () => {
       originRef.current = { x: note.x, y: note.y };
       onBringToFront(note.id);
     },
     onDragMove: (dx, dy) => {
-      const board = noteRef.current?.parentElement;
+      const el = noteRef.current;
+      const board = el?.parentElement;
       let newX = originRef.current.x + dx;
       let newY = originRef.current.y + dy;
       if (board) {
@@ -52,16 +53,22 @@ export const useNoteMove = ({
         newX = Math.max(-note.width + MIN_VISIBLE, Math.min(newX, bw - MIN_VISIBLE));
         newY = Math.max(0, Math.min(newY, bh - MIN_VISIBLE));
       }
-      onUpdate({ id: note.id, x: newX, y: newY });
+      finalPos.current = { x: newX, y: newY };
+
+      if (el) {
+        el.style.left = `${String(newX)}px`;
+        el.style.top = `${String(newY)}px`;
+      }
+
       setOverTrash(isNoteOverTrash());
     },
     onDragEnd: () => {
       if (isNoteOverTrash()) {
         onRemove(note.id);
+      } else {
+        onUpdate({ id: note.id, x: finalPos.current.x, y: finalPos.current.y });
       }
       setOverTrash(false);
     },
   });
-
-  return { overTrash, handleMoveDown };
 };
